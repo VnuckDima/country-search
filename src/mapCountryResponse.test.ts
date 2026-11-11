@@ -19,7 +19,7 @@ describe('mapCountryResponse', () => {
   it('maps full API country to card fields', () => {
     const card = mapCountryResponse(spain)
 
-    expect(card).toEqual({
+    expect(card).toMatchObject({
       name: 'Spain',
       flag: '🇪🇸',
       capital: 'Madrid',
@@ -27,6 +27,16 @@ describe('mapCountryResponse', () => {
       population: 47351567,
       languages: ['Spanish'],
     })
+  })
+
+  it('exposes detail fields for the detail view', () => {
+    const card = mapCountryResponse(spain)
+
+    expect(card.area).toBe(505992)
+    expect(card.borders).toEqual(['AND', 'FRA', 'GIB', 'PRT', 'MAR'])
+    expect(card.languageList).toEqual([{ name: 'Spanish', iso639_1: 'es' }])
+    expect(card.currencies).toHaveLength(1)
+    expect(card.currencies[0]).toMatchObject({ code: 'EUR', name: 'Euro' })
   })
 
   it('prefers emoji flag, falls back to flags.png', () => {
@@ -47,6 +57,9 @@ describe('mapCountryResponse', () => {
 
     expect(card.languages).toEqual([])
     expect(card.population).toBe(0)
+    expect(card.languageList).toEqual([])
+    expect(card.currencies).toHaveLength(1)
+    expect(card.currencies[0]).toMatchObject({ code: 'EUR', name: 'Euro' })
   })
 
   it('is pure: does not mutate the input', () => {
