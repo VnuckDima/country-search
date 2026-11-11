@@ -14,6 +14,7 @@ export declare class App {
     private readonly historyBox;
     private readonly historyLabel;
     private readonly historyList;
+    private readonly hint;
     private readonly cache;
     private readonly history;
     private readonly detailByName;

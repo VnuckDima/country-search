@@ -45,6 +45,7 @@ export class App {
     historyBox = el('div');
     historyLabel = el('p', 'muted');
     historyList = el('div');
+    hint = el('p', 'muted');
     cache = new CountryCache();
     history = new History();
     detailByName = new Map();
@@ -69,13 +70,15 @@ export class App {
         this.detailBack.textContent = '← Назад к результатам';
         this.historyLabel.textContent = 'Недавно:';
         this.emptyBox.textContent = 'Ничего не найдено';
+        this.hint = el('p', 'muted');
+        this.hint.textContent = 'API ищет только по английским названиям (например, spain, belarus, germany)';
         this.errorBox.appendChild(this.errorMessage);
         this.errorBox.appendChild(this.retryBtn);
         this.detail.appendChild(this.detailBack);
         this.detail.appendChild(this.detailContent);
         this.historyBox.appendChild(this.historyLabel);
         this.historyBox.appendChild(this.historyList);
-        this.container.append(this.createHeading(), this.input, this.loader, this.results, this.emptyBox, this.errorBox, this.detail, this.historyBox);
+        this.container.append(this.createHeading(), this.input, this.hint, this.loader, this.results, this.emptyBox, this.errorBox, this.detail, this.historyBox);
         document.body.appendChild(this.container);
         this.input.addEventListener('input', () => this.onInput());
         this.retryBtn.addEventListener('click', () => this.onRetry());
@@ -122,6 +125,7 @@ export class App {
             this.renderHistory();
         }).catch((err) => {
             if (query !== this.currentQuery) {
+                this.showList();
                 return;
             }
             const name = err instanceof Error ? err.name : '';
@@ -185,7 +189,9 @@ export class App {
         if (!country) {
             return;
         }
-        this.hideAll();
+        this.loader.hidden = true;
+        this.errorBox.hidden = true;
+        this.emptyBox.hidden = true;
         this.detail.hidden = false;
         this.detailContent.replaceChildren();
         const flag = el('span', 'flag');

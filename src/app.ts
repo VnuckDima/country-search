@@ -53,6 +53,7 @@ export class App {
   private readonly historyBox = el('div')
   private readonly historyLabel = el('p', 'muted')
   private readonly historyList = el('div')
+  private readonly hint = el('p', 'muted')
 
   private readonly cache = new CountryCache()
   private readonly history = new History()
@@ -82,6 +83,8 @@ export class App {
     this.detailBack.textContent = '← Назад к результатам'
     this.historyLabel.textContent = 'Недавно:'
     this.emptyBox.textContent = 'Ничего не найдено'
+    this.hint = el('p', 'muted')
+    this.hint.textContent = 'API ищет только по английским названиям (например, spain, belarus, germany)'
 
     this.errorBox.appendChild(this.errorMessage)
     this.errorBox.appendChild(this.retryBtn)
@@ -93,6 +96,7 @@ export class App {
     this.container.append(
       this.createHeading(),
       this.input,
+      this.hint,
       this.loader,
       this.results,
       this.emptyBox,
@@ -157,6 +161,7 @@ export class App {
       this.renderHistory()
     }).catch((err) => {
       if (query !== this.currentQuery) {
+        this.showList()
         return
       }
       const name = err instanceof Error ? err.name : ''
@@ -233,7 +238,9 @@ export class App {
       return
     }
 
-    this.hideAll()
+    this.loader.hidden = true
+    this.errorBox.hidden = true
+    this.emptyBox.hidden = true
     this.detail.hidden = false
     this.detailContent.replaceChildren()
 

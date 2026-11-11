@@ -185,7 +185,7 @@ describe('App interaction', () => {
 
     cards()[0].click()
     expect(detailEl().hidden).toBe(false)
-    expect(resultsEl().hidden).toBe(true)
+    expect(resultsEl().hidden).toBe(false)
     expect(detailEl().textContent).toContain('Spain')
     expect(detailEl().textContent).toContain((505992).toLocaleString('ru-RU'))
     expect(detailEl().textContent).toContain('Madrid')
