@@ -150,6 +150,7 @@ export class App {
 
     this.cache.search(query, signal).then((data) => {
       if (query !== this.currentQuery) {
+        this.showList()
         return
       }
       this.detailByName.clear()
