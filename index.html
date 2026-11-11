@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поиск стран — countries.dev</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  * {
+    box-sizing: border-box
+  }
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    color: #111
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto
+  }
+  h1 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem
+  }
+  input#query {
+    font: inherit;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem
+  }
+  button {
+    font: inherit;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px
+  }
+  button.primary {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb
+  }
+  .hidden,
+  .loader.hidden {
+    display: none !important
+  }
+  .loader {
+    display: inline-block
+  }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    background: #fff
+  }
+  .card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+  }
+  .flag {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    vertical-align: middle
+  }
+  .card h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+    display: inline
+  }
+  .card p {
+    margin: 0.15rem 0;
+    font-size: 0.9rem;
+    color: #444
+  }
+  .empty {
+    color: #666;
+    margin-top: 1rem
+  }
+  .error {
+    border: 1px solid #dc2626;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-top: 1rem
+  }
+  .error button {
+    margin-top: 0.5rem
+  }
+  .detail {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: #fff
+  }
+  .detail h2 {
+    margin-top: 0
+  }
+  .detail .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem
+  }
+  .detail img.flag {
+    width: 120px;
+    height: auto;
+    border-radius: 6px
+  }
+  .detail ul {
+    margin: 0.25rem 0;
+    padding-left: 1.2rem;
+    color: #444
+  }
+  .detail li {
+    margin: 0.15rem 0
+  }
+  .muted {
+    color: #666
+  }
+  #history-list {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem
+  }
+  #history-list button {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    font-size: 0.85rem
+  }
+</style>
+</head>
+<body>
+<script type="module" src="/src/app.ts"></script>
+</body>
+</html>
