@@ -4,11 +4,6 @@ import { History } from './history.js';
 import { HttpError } from './types.js';
 const DEBOUNCE_MS = 300;
 const TIMEOUT_MS = 10_000;
-/**
- * Ручное equivalents AbortSignal.any: объединяет несколько сигналов в один.
- * Отменяется, как только отменяется любой из источников; причина первой
- * отмены сохраняется (чтобы TimeoutError не спутать с AbortError).
- */
 export function combineSignals(...signals) {
     const controller = new AbortController();
     let settled = false;
@@ -58,7 +53,7 @@ export class App {
     constructor() {
         this.input.id = 'query';
         this.input.type = 'search';
-        this.input.placeholder = 'Название страны (например, spain)';
+        this.input.placeholder = 'Название страны на английском (например, spain)';
         this.input.autocomplete = 'off';
         this.loader.id = 'loader';
         this.results.id = 'results';
@@ -95,7 +90,6 @@ export class App {
     }
     onInput() {
         const query = this.input.value.trim();
-        // Реальная отмена предыдущего запроса при каждом изменении ввода
         this.cache.abort(this.currentQuery);
         this.debouncedSearch.cancel();
         this.currentQuery = query;
@@ -132,7 +126,7 @@ export class App {
             }
             const name = err instanceof Error ? err.name : '';
             if (name === 'AbortError') {
-                // Наш же отменённый запрос — пользователю ничего не показываем
+                this.showList();
                 return;
             }
             if (name === 'TimeoutError') {

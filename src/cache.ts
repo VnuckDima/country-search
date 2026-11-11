@@ -22,23 +22,29 @@ export class CountryCache {
     }
 
     const owner = new AbortController()
-    const promise = searchCountries(query, owner.signal).then((data) => {
-      this.data.set(query, data)
-      return data
+    let resolveFlight!: (data: CountryCard[]) => void
+    let rejectFlight!: (err: unknown) => void
+
+    const flightPromise = new Promise<CountryCard[]>((resolve, reject) => {
+      resolveFlight = resolve
+      rejectFlight = reject
     })
 
-    const newFlight: Flight = { owner, promise }
-    this.flights.set(query, newFlight)
-    return promise.then(
+    searchCountries(query, owner.signal).then(
       (data) => {
+        this.data.set(query, data)
         this.flights.delete(query)
-        return data
+        resolveFlight(data)
       },
       (err) => {
         this.flights.delete(query)
-        throw err
-      },
+        rejectFlight(err)
+      }
     )
+
+    const newFlight: Flight = { owner, promise: flightPromise }
+    this.flights.set(query, newFlight)
+    return flightPromise
   }
 
   abort(query: string): void {
@@ -77,7 +83,7 @@ export class CountryCache {
         (err) => {
           signal.removeEventListener('abort', onAbort)
           reject(err)
-        },
+        }
       )
     })
   }

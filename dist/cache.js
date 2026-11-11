@@ -1,13 +1,4 @@
 import { searchCountries } from './searchCountries';
-/**
- * Кэш ответов по строке запроса с дедупликацией одновременно полётающих
- * одинаковых запросов.
- *
- * Каждый вызывающий получает свой промист и свой сигнал отмены: отмена одним
- * вызывающимrejects только его промист и не ломает общий полёт для остальных.
- * Реальная отмена сетевого запроса (AbortController.abort) происходит, когда
- * весь запрос認елен как устаревший (abort(query)).
- */
 export class CountryCache {
     data = new Map();
     flights = new Map();
@@ -21,21 +12,24 @@ export class CountryCache {
             return this.join(flight, signal);
         }
         const owner = new AbortController();
-        const promise = searchCountries(query, owner.signal).then((data) => {
-            this.data.set(query, data);
-            return data;
+        let resolveFlight;
+        let rejectFlight;
+        const flightPromise = new Promise((resolve, reject) => {
+            resolveFlight = resolve;
+            rejectFlight = reject;
         });
-        const newFlight = { owner, promise };
-        this.flights.set(query, newFlight);
-        return promise.then((data) => {
+        searchCountries(query, owner.signal).then((data) => {
+            this.data.set(query, data);
             this.flights.delete(query);
-            return data;
+            resolveFlight(data);
         }, (err) => {
             this.flights.delete(query);
-            throw err;
+            rejectFlight(err);
         });
+        const newFlight = { owner, promise: flightPromise };
+        this.flights.set(query, newFlight);
+        return flightPromise;
     }
-    /** Реальная отмена сетевого запроса для запроса query (если он в полёте). */
     abort(query) {
         const flight = this.flights.get(query);
         if (flight) {

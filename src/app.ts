@@ -66,7 +66,7 @@ export class App {
   constructor() {
     this.input.id = 'query'
     this.input.type = 'search'
-    this.input.placeholder = 'Название страны (например, spain)'
+    this.input.placeholder = 'Название страны на английском (например, spain)'
     this.input.autocomplete = 'off'
     this.loader.id = 'loader'
     this.results.id = 'results'

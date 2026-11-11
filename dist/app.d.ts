@@ -1,8 +1,3 @@
-/**
- * Ручное equivalents AbortSignal.any: объединяет несколько сигналов в один.
- * Отменяется, как только отменяется любой из источников; причина первой
- * отмены сохраняется (чтобы TimeoutError не спутать с AbortError).
- */
 export declare function combineSignals(...signals: AbortSignal[]): AbortSignal;
 export declare class App {
     private readonly container;

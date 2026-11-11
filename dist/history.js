@@ -33,11 +33,6 @@ export class History {
         }
     }
     persist() {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
-        }
-        catch {
-            // localStorage может быть недоступен (режим приватности, квота и т.п.)
-        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
     }
 }
