@@ -161,6 +161,7 @@ export class App {
       }
       const name = err instanceof Error ? err.name : ''
       if (name === 'AbortError') {
+        this.showList()
         return
       }
       if (name === 'TimeoutError') {
