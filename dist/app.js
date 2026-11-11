@@ -57,6 +57,7 @@ export class App {
         this.input.placeholder = 'Название страны на английском (например, spain)';
         this.input.autocomplete = 'off';
         this.loader.id = 'loader';
+        this.loader.hidden = true;
         this.results.id = 'results';
         this.emptyBox.id = 'empty';
         this.errorBox.id = 'error';

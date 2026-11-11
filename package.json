@@ -8,7 +8,7 @@
     "format": "prettier --write .",
     "dev": "vite",
     "test": "vitest run",
-    "build": "tsc",
+    "build": "react-scripts build",
     "prepare": "husky"
   },
   "lint-staged": {
