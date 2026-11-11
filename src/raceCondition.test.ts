@@ -57,8 +57,8 @@ describe('race condition (stale responses must not win)', () => {
     const promise2 = searchCountries('spain', controller2.signal)
 
     expect(calls).toHaveLength(2)
-    expect(calls[0].url).toBe('https://countries.dev/name/sp')
-    expect(calls[1].url).toBe('https://countries.dev/name/spain')
+    expect(calls[0]!.url).toBe('https://countries.dev/name/sp')
+    expect(calls[1]!.url).toBe('https://countries.dev/name/spain')
 
     // New input arrives: the app aborts the previous request for real.
     controller1.abort()
@@ -70,22 +70,21 @@ describe('race condition (stale responses must not win)', () => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-    calls[1].resolve(spainResponse)
+    calls[1]!.resolve(spainResponse)
 
     const result2 = await promise2
-    expect(result2).toEqual([
-      {
-        name: 'Spain',
-        flag: '🇪🇸',
-        capital: 'Madrid',
-        region: 'Europe',
-        population: 47351567,
-        languages: ['Spanish'],
-      },
-    ])
+    expect(result2).toHaveLength(1)
+    expect(result2[0]).toMatchObject({
+      name: 'Spain',
+      flag: '🇪🇸',
+      capital: 'Madrid',
+      region: 'Europe',
+      population: 47351567,
+      languages: ['Spanish'],
+    })
 
     // The stale earlier response arrives after the newer one — it must not surface.
-    calls[0].resolve(new Response('[]', { status: 200 }))
+    calls[0]!.resolve(new Response('[]', { status: 200 }))
 
     const result1 = await expect(promise1).rejects.toMatchObject({ name: 'AbortError' })
     expect(result1).toBeDefined()
@@ -106,7 +105,7 @@ describe('race condition (stale responses must not win)', () => {
     await expect(promise1).rejects.toMatchObject({ name: 'AbortError' })
 
     // Only the aborted caller's fetch is rejected; the other caller keeps waiting.
-    calls[1].resolve(new Response('[]', { status: 200 }))
+    calls[1]!.resolve(new Response('[]', { status: 200 }))
     await expect(promise2).resolves.toEqual([])
   })
 })

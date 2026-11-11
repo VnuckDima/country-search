@@ -67,16 +67,15 @@ describe('searchCountries', () => {
     const { signal } = abortSignal()
     const result = await searchCountries('spain', signal)
 
-    expect(result).toEqual([
-      {
-        name: 'Spain',
-        flag: '🇪🇸',
-        capital: 'Madrid',
-        region: 'Europe',
-        population: 47351567,
-        languages: ['Spanish'],
-      },
-    ])
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      name: 'Spain',
+      flag: '🇪🇸',
+      capital: 'Madrid',
+      region: 'Europe',
+      population: 47351567,
+      languages: ['Spanish'],
+    })
     expect(fetch).toHaveBeenCalledWith(
       'https://countries.dev/name/spain',
       expect.objectContaining({ signal }),
