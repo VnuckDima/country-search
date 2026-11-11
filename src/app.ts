@@ -7,11 +7,6 @@ import type { CountryCard, CountryDetail } from './types.js'
 const DEBOUNCE_MS = 300
 const TIMEOUT_MS = 10_000
 
-/**
- * Ручное equivalents AbortSignal.any: объединяет несколько сигналов в один.
- * Отменяется, как только отменяется любой из источников; причина первой
- * отмены сохраняется (чтобы TimeoutError не спутать с AbortError).
- */
 export function combineSignals(...signals: AbortSignal[]): AbortSignal {
   const controller = new AbortController()
   let settled = false
@@ -124,7 +119,6 @@ export class App {
   private onInput(): void {
     const query = this.input.value.trim()
 
-    // Реальная отмена предыдущего запроса при каждом изменении ввода
     this.cache.abort(this.currentQuery)
     this.debouncedSearch.cancel()
     this.currentQuery = query
@@ -167,7 +161,6 @@ export class App {
       }
       const name = err instanceof Error ? err.name : ''
       if (name === 'AbortError') {
-        // Наш же отменённый запрос — пользователю ничего не показываем
         return
       }
       if (name === 'TimeoutError') {

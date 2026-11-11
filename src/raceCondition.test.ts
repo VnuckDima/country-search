@@ -60,12 +60,10 @@ describe('race condition (stale responses must not win)', () => {
     expect(calls[0]!.url).toBe('https://countries.dev/name/sp')
     expect(calls[1]!.url).toBe('https://countries.dev/name/spain')
 
-    // New input arrives: the app aborts the previous request for real.
     controller1.abort()
 
     await expect(promise1).rejects.toMatchObject({ name: 'AbortError' })
 
-    // The later request resolves first.
     const spainResponse = new Response(JSON.stringify(spainRaw), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -83,7 +81,6 @@ describe('race condition (stale responses must not win)', () => {
       languages: ['Spanish'],
     })
 
-    // The stale earlier response arrives after the newer one — it must not surface.
     calls[0]!.resolve(new Response('[]', { status: 200 }))
 
     const result1 = await expect(promise1).rejects.toMatchObject({ name: 'AbortError' })
@@ -104,7 +101,6 @@ describe('race condition (stale responses must not win)', () => {
 
     await expect(promise1).rejects.toMatchObject({ name: 'AbortError' })
 
-    // Only the aborted caller's fetch is rejected; the other caller keeps waiting.
     calls[1]!.resolve(new Response('[]', { status: 200 }))
     await expect(promise2).resolves.toEqual([])
   })
